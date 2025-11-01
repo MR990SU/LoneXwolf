@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terabox Downloader | LoneXwolf</title>
+  <style>
+    body {
+      background: #f4f7fa;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+    .soft-container {
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: 0 4px 32px 0 rgba(175, 186, 203, 0.22);
+      padding: 48px 32px 40px 32px;
+      max-width: 480px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 36px;
+      transition: box-shadow 0.18s;
+    }
+    .input-bar {
+      display: flex;
+      background: #f7f8fa;
+      border-radius: 16px;
+      align-items: center;
+      padding: 0 10px 0 0;
+      height: 56px;
+      box-shadow: 0 2px 8px #eceff3;
+      gap: 0;
+      transition: box-shadow 0.18s;
+    }
+    .input-bar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 0 20px;
+      flex: 1;
+      font-size: 1.17em;
+      color: #2d394a;
+      font-family: inherit;
+    }
+    .input-bar input::placeholder {
+      color: #bfc7d0;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+    .paste-btn {
+      background: #eef1f5;
+      color: #858fa3;
+      border: none;
+      outline: none;
+      height: 40px;
+      min-width: 76px;
+      margin: 0 6px;
+      border-radius: 9px;
+      font-size: 1.11em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #d9e0e8;
+      transition: background 0.14s;
+    }
+    .paste-btn:active { background: #dde2ea; }
+    .get-btn {
+      width: 100%;
+      background: #9ba1ab;
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.27em;
+      font-weight: bold;
+      height: 60px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px 0 #dde2ea;
+      letter-spacing: 0.01em;
+      margin-top: 10px;
+      transition: background 0.18s;
+      outline: none;
+    }
+    .get-btn.enabled {
+      background: #6a7dd6;
+    }
+    .get-btn:active { filter: brightness(0.96); }
+    .loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto 8px auto;
+      color: #7a5cf4;
+      font-size: 1.09em;
+      font-weight: 600;
+      animation: fade-in 0.25s;
+    }
+    @keyframes fade-in { from {opacity:0;} to {opacity:1;} }
+    .error-msg {
+      color: #ed4956;
+      font-size: 1em;
+      margin: 8px 0 0 0;
+      text-align: center;
+      background: #fff6f6;
+      border-radius: 11px;
+      font-weight: 500;
+      padding: 7px 0;
+      animation: fade-in 0.29s;
+      /* transition for smooth appearance */
+    }
+    #downloadResults {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .result-card {     
+      background: #f7f8fa;
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px #eceff3;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 17px;
+      transition: transform 0.15s ease, box-shadow 0.18s;
+    }
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 18px #eaeafc;
+    }
+    .result-card img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 11px;
+      background: #ddd;
+      flex-shrink: 0;
+    }
+    .result-details {
+      flex: 1;
+      min-width: 0;
+    }
+    .result-details h3 {
+      font-size: 1.11em;
+      color: #2d394a;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .result-details p {
+      color: #5c6a7d;
+      margin: 2px 0;
+      font-size: 0.96em;
+    }
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .download-link {
+      background: #6a7dd6;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      padding: 7px 18px;
+      font-size: 0.98em;
+      font-weight: 500;
+      align-self: flex-start;
+      transition: background 0.18s;
+      border: none;
+      cursor: pointer;
+    }
+    .download-link:hover {
+      background: #5d6fc9;
+    }
+    .play-btn {
+      background: #eaf0ff;
+      color: #3949ab;
+      border-radius: 8px;
+      border: none;
+      padding: 7px 18px;
+      font-size: 1.01em;
+      font-weight: 500;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.17s;
+    }
+    .play-btn:hover {
+      background: #cfd7ff;
+    }
+    @media (max-width: 600px) {
+      .soft-container { padding:24px 7px 28px 7px; max-width: 99vw; gap:20px;}
+      .result-card { flex-direction: column; align-items: stretch; }
+      .result-card img { width:44px;height:44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="soft-container">
+    <div class="input-bar">
+      <input type="text" id="teraboxLink" placeholder="Paste your video link here (40+ characters)..." autocomplete="off" />
+      <button class="paste-btn" id="pasteBtn" type="button" aria-label="Paste from clipboard">Paste</button>
+    </div>
+    <button class="get-btn" id="generateBtn" disabled type="button" aria-label="Generate download links">Get Video</button>
+    <div class="loader" id="loader" style="display:none;">⏳ Processing, please wait...</div>
+    <div class="error-msg" id="errorMsg" style="display:none;"></div>
+    <div id="downloadResults"></div>
+  </div>
+<script>
+  const input = document.getElementById('teraboxLink');
+  const pasteBtn = document.getElementById('pasteBtn');
+  const genBtn = document.getElementById('generateBtn');
+  const loader = document.getElementById('loader');
+  const errorMsg = document.getElementById('errorMsg');
+  const resultsDiv = document.getElementById('downloadResults');
+  const API_BASE = "https://terabox-downloader-worker.lonexwolf.workers.dev";
+
+  function checkInput() {
+    if (input.value.trim().length >= 40) {
+      genBtn.disabled = false;
+      genBtn.classList.add('enabled');
+    } else {
+      genBtn.disabled = true;
+      genBtn.classList.remove('enabled');
+    }
+  }
+  input.addEventListener('input', checkInput);
+
+  pasteBtn.onclick = async function() {
+    try {
+      const text = await navigator.clipboard.readText();
+      input.value = text;
+      checkInput();
+    } catch (e) {
+      showError('Clipboard access denied or not supported.');
+    }
+  };
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.style.display = "block";
+  }
+  function hideError() {
+    errorMsg.textContent = "";
+    errorMsg.style.display = "none";
+  }
+
+  genBtn.onclick = async () => {
+    if (genBtn.disabled) return;
+    hideError();
+    loader.style.display = "flex";
+    resultsDiv.innerHTML = "";
+    genBtn.disabled = true;
+    genBtn.classList.remove('enabled');
+
+    const userUrl = input.value.trim();
+    if (!userUrl) {
+      loader.style.display = "none";
+      genBtn.disabled = false;
+      showError("Please enter a Terabox URL.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/?url=${encodeURIComponent(userUrl)}`);
+      if (!res.ok) throw new Error("Network error!");
+      const data = await res.json();
+
+      if (!data.files || !data.files.length) {
+        showError("No files found or invalid Terabox link.");
+        return;
+      }
+      hideError();
+      renderResults(data.files);
+    } catch (err) {
+      showError("Something went wrong. Try again!");
+    } finally {
+      loader.style.display = "none";
+      genBtn.disabled = false;
+      checkInput();
+    }
+  };
+
+  function renderResults(files) {
+    resultsDiv.innerHTML = "";
+    files.forEach(file => {
+      // fallback for thumb image
+      const thumb = file.thumb || "https://via.placeholder.com/56x56?text=VID";
+      const sizeText = file.size ? file.size : file.sizeMB ? `${file.sizeMB} MB` : 'Unknown';
+
+      const card = document.createElement('div');
+      card.classList.add('result-card');
+      card.innerHTML = `
+        <img src="${thumb}" alt="Thumbnail">
+        <div class="result-details">
+          <h3>${file.name || 'Untitled file'}</h3>
+          <p><strong>Size:</strong> ${sizeText}</p>
+          ${file.format ? `<p><strong>Format:</strong> ${file.format}</p>` : ""}
+        </div>
+        <div class="result-actions">
+          <a href="${file.downloadUrl || file.link || '#'}" target="_blank" class="download-link" aria-label="Download ${file.name}">Download</a>
+          <button class="play-btn" onclick="window.open('${file.playUrl || file.downloadUrl || file.link}','_blank')" aria-label="Play ${file.name}">▶️ Play</button>
+        </div>
+      `;
+      resultsDiv.appendChild(card);
+    });
+  }
+</script>
+</body>
+</html>
