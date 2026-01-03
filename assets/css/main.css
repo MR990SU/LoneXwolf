@@ -1216,8 +1216,13 @@ section,
 /*--------------------------------------------------------------
 # Contact Section
 --------------------------------------------------------------*/
+#contact {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .contact .info-item+.info-item {
-  margin-top: 40px;
+  margin-top: 15px;
 }
 
 .contact .info-item i {
@@ -1238,7 +1243,7 @@ section,
   padding: 0;
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .contact .info-item p {
@@ -1260,9 +1265,9 @@ section,
 .contact .php-email-form input[type=email],
 .contact .php-email-form textarea {
   font-size: 14px;
-  padding: 10px 15px;
+  padding: 6px 10px;
   box-shadow: none;
-  border-radius: 0;
+  border-radius: 20px;
   color: var(--default-color);
   background-color: color-mix(in srgb, var(--background-color), transparent 50%);
   border-color: color-mix(in srgb, var(--default-color), transparent 80%);
@@ -1284,9 +1289,10 @@ section,
   color: var(--contrast-color);
   background: var(--accent-color);
   border: 0;
-  padding: 10px 30px;
+  padding: 8px 25px;
   transition: 0.4s;
   border-radius: 50px;
+  margin-top: 40px;
 }
 
 .contact .php-email-form button[type=submit]:hover {
